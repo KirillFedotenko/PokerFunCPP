@@ -3,6 +3,8 @@
 #include <iostream>
 #define random(a,b) a+rand()%(b+1-a)
 using namespace std;
+const string NAMES[7]{ "Vasya", "Katya", "Ira", "Kolya", "Igor", "Goga", "Zhora" };
+const int COUNT_NAMES = 7;
 int** GenerateCardsSet() {
 	int** set = new int* [52];
 	for (int index=0, value=2; value < 15; value++) {
@@ -34,11 +36,44 @@ void showCards(int** array) {
 		cout << char(array[i][1]) << " ";
 	}
 }
-
 void Shuffle(int** array) {
 	int size = _msize(array) / sizeof(array[0]);
 	for (int i = 0; i < 26; i++) {
 		swap(array[i], array[random(0, size - 1)]);
+	}
+}
+string* createPlayers(int count) {
+	if (count > 5 || count < 1) {
+		cout << "Некорректоное кол-во игроков";
+		return nullptr;
+	}
+	else{
+		string* array = new string[count];
+		for(int i = 0,flag; i < count; i++) {
+			array[i] = NAMES[random(0, COUNT_NAMES-1)];
+			flag = false;
+			for (int j = 0; j < i; j++) {
+				if (array[i] == array[j]) {
+					flag = true;
+					break;
+				}
+			}
+			if (flag)i--;
+		}
+		return array;
+	}
+}
+
+int* createCash(int countPlayers, int countMoney) {
+	int* cash = new int[countPlayers];
+	for (int i = 0; i < countPlayers; i++) {
+		cash[i] = countMoney;
+	}
+	return cash;
+}
+void showPlayers(string*& players, int count, int*& cash) {
+	for (int i = 0; i < count; i++) {
+		cout << players[i]<<"\t" << cash[i] << "$" << endl;
 	}
 }
 int main()
@@ -49,6 +84,9 @@ int main()
 	int** mainSet = GenerateCardsSet();
 	Shuffle(mainSet);
 	showCards(mainSet);
-
-	
+	cout << endl;
+	int playersCount = 5;
+	string* playersName = createPlayers(playersCount);
+	int* cash = createCash(playersCount, 1000);
+	showPlayers(playersName, playersCount, cash);
 }
