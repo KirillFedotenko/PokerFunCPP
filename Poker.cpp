@@ -45,7 +45,7 @@ void Shuffle(int** array) {
 	}
 }
 string* createPlayers(int count) {
-	if (count > 6 || count < 1) {
+	if (count > 6 || count < 3) {
 		cout << "Некорректоное кол-во игроков";
 		return nullptr;
 	}
@@ -83,7 +83,7 @@ void showPlayer(string players, int cash, int**& playersSet) {
 	showCards(playersSet);
 	cout << "] " << endl;
 }
-void transferCard(int**& outSet, int**& inSet) {
+void transferTopCard(int**& outSet, int**& inSet) {
 	int CountOutSet = _msize(outSet) / sizeof(outSet[0]);
 	int CountInSet = _msize(inSet) / sizeof(inSet[0]);
 	int** outSetBuf = new int* [CountOutSet - 1];
@@ -100,29 +100,41 @@ void transferCard(int**& outSet, int**& inSet) {
 	inSet = inSetBuf;
 	outSet = outSetBuf;
 }
+
 int main()
 {
 	srand(time(NULL));
 	setlocale(LC_ALL, "");
 	int** mainSet = GenerateCardsSet();
-	Shuffle(mainSet);
+	for (int i = 0; i < 3765; i++) {
+		Shuffle(mainSet);
+	}
 	showCards(mainSet);
 	cout << endl;
 	int playersCount = 6;
 	string* playersName = createPlayers(playersCount);
-	int* cash = createCash(playersCount, 1000);
+	int* cash = createCash(playersCount, DEFAULT_CASH);
 	int*** playersSets = new int** [playersCount];
 	for (int i = 0; i < playersCount; i++) {
 		playersSets[i] = new int* [0];
 	}
 	for (int i = 0; i < playersCount; i++) {
 		for (int j = 0; j < 2; j++) {
-		transferCard(mainSet, playersSets[i]);
+		transferTopCard(mainSet, playersSets[i]);
 		}
 	}
 	for (int i = 0; i < playersCount; i++) {
 		showPlayer(playersName[i], cash[i], playersSets[i]);
 	}
+	int** tableSet = new int* [0];
+	for (int i = 0; i < 3; i++) {
+		transferTopCard(mainSet, tableSet);
+	}
+	cout << "стол: ";
+	showCards(tableSet);
+
+	int blinde = DEFAULT_CASH / 20;
+	int smallBlinde = blinde / 2;
 	while (true) {
 
 	}
