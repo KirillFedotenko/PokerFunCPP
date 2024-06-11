@@ -100,7 +100,6 @@ void transferTopCard(int**& outSet, int**& inSet) {
 	inSet = inSetBuf;
 	outSet = outSetBuf;
 }
-
 int main()
 {
 	srand(time(NULL));
@@ -135,7 +134,44 @@ int main()
 
 	int blinde = DEFAULT_CASH / 20;
 	int smallBlinde = blinde / 2;
+	int indexSmallBlinde = 0;
+	int currentPlayer;
 	while (true) {
+		
+		if (indexSmallBlinde > playersCount - 1)indexSmallBlinde = 0;
+		currentPlayer = indexSmallBlinde;
+		if(cash[indexSmallBlinde]>=smallBlinde){
+			cash[currentPlayer++] -= smallBlinde;
+		}
+		if (cash[indexSmallBlinde+1] >= blinde) {
+			cash[currentPlayer++] -= smallBlinde;
+		}
+		for (int i = indexSmallBlinde; i < playersCount; i++) {
+			cout << "введите вашу ставку: ";
+			int currentBlinde;
+			cin >> currentBlinde;
+			if (currentBlinde == 0) {
+				cout << "игрок пасанул" << endl;
+				continue;
+			}
+			else if (currentBlinde < blinde) {
+				cout << "недостаточная ставка" << endl;
+				i--;
+				continue;
+			}
+			else if (currentBlinde < cash[i]) {
+				cout << "недостаточно денег" << endl;
+				i--;
+				continue;
+			}
+			else {
+				cout << "ставка принята" << endl;
+				cash[i] -= currentBlinde;
+			}
 
+		}
+		for (int i = 0; i < indexSmallBlinde; i++) {
+
+		}
 	}
 }
